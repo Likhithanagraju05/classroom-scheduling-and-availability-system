@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Class</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            background: #1e40af;
+            font-family: Arial, sans-serif;
+        }
+        /* Back Button Style */
+    .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 420px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #c7d2fe;
+            margin-bottom: 18px;
+        }
+
+        input[readonly] {
+            background: #f1f5f9;
+            cursor: not-allowed;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #22c55e;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- ✅ Validation Script (UNCHANGED LOGIC, JUST CLEAN) -->
+    <script>
+        function validateTime(time) {
+            // Accept: 1 AM, 2PM, 10:30 AM, 11:45PM
+            const regex = /^(1[0-2]|[1-9])(:[0-5][0-9])?\s?(AM|PM)$/i;
+            return regex.test(time.trim());
+        }
+
+        function validateForm() {
+            const start = document.querySelector("[name='start_time']").value;
+            const end = document.querySelector("[name='end_time']").value;
+
+            if (!validateTime(start)) {
+                alert("Enter Start Time like 1 AM or 10:30 PM");
+                return false;
+            }
+
+            if (!validateTime(end)) {
+                alert("Enter End Time like 2 PM or 11:45 AM");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+
+<a href="{{ url_for('dashboard') }}" class="back-btn">← Back</a>
+
+<div class="container">
+        <div class="card">
+
+        <h2>Start Class</h2>
+
+        {% with messages = get_flashed_messages() %}
+         {% if messages %}
+           <div style="background:#fee2e2;color:#b91c1c;padding:10px;border-radius:8px;margin-bottom:15px;">
+              {{ messages[0] }}
+            </div>
+         {% endif %}
+        {% endwith %}
+
+        <form method="POST"
+              action="{{ url_for('start_end_class') }}"
+              onsubmit="return validateForm()">
+
+            <!-- 🔒 READ ONLY (Backend uses session name) -->
+            <label>Lecturer Name</label>
+            <input type="text"
+                   name="lecturer"
+                   value="{{ lecturer }}"
+                   required>
+
+
+            <label>Classroom Number</label>
+            <input type="text" name="room" required>
+
+            <label>Subject</label>
+            <input type="text" name="subject" required>
+
+            <label>Start Time</label>
+            <input type="text"
+                   name="start_time"
+                   placeholder="e.g. 1 AM or 10:30 PM"
+                   required>
+
+            <label>End Time</label>
+            <input type="text"
+                   name="end_time"
+                   placeholder="e.g. 2 PM or 11:45 AM"
+                   required>
+
+            <button type="submit">Start Class</button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+
+</html>

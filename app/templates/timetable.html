@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Timetable</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { font-family: Arial; background:#f4f6fb;  padding:10px 30px; }
+
+/* BACK BUTTON */
+.back-btn{
+background:#22c55e;
+color:white;
+padding:10px 18px;
+text-decoration:none;
+border-radius:6px;
+display:inline-block;
+margin-bottom:20px;
+font-weight:600;
+}
+.back-btn:hover{ background:#16a34a; }
+
+.add-form{
+display:flex;
+gap:8px;
+align-items:center;
+background:white;
+padding:15px;
+border-radius:6px;
+margin-bottom:25px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+padding:8px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#1f3c88;
+color:white;
+}
+
+.save-btn{
+background:green;
+color:white;
+border:none;
+padding:6px 10px;
+}
+
+.remove-btn{
+background:red;
+color:white;
+border:none;
+padding:6px 10px;
+}
+
+input[type=text]{
+width:95%;
+padding:4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACK BUTTON (GOES DIRECTLY TO DASHBOARD) -->
+<div class="header-bar">
+    <a href="{{ url_for('dashboard') }}" class="back-btn">← Back</a>
+    <h2>Manage Timetable</h2>
+</div>
+<!-- ADD FORM -->
+ <div class="timetable-container">
+<form method="POST" class="add-form">
+
+<select name="day" required>
+<option value="">Day</option>
+<option>Monday</option>
+<option>Tuesday</option>
+<option>Wednesday</option>
+<option>Thursday</option>
+<option>Friday</option>
+<option>Saturday</option>
+</select>
+
+<input type="text" name="time" placeholder="08:00 - 09:00" required>
+<input type="text" name="course" placeholder="Course Name" required>
+<input type="text" name="class_name" placeholder="Class Name" required>
+<input type="text" name="room" placeholder="Room No" required>
+
+<button type="submit">Add</button>
+
+</form>
+
+<table>
+
+<tr>
+<th>Day</th>
+<th>Time</th>
+<th>Course Name</th>
+<th>Class Name</th>
+<th>Room Number</th>
+<th>Action</th>
+</tr>
+
+{% for row in timetable %}
+<tr>
+
+<form method="POST" action="{{ url_for('edit_timetable') }}">
+
+<input type="hidden" name="id" value="{{ row.id }}">
+
+<td><input type="text" name="day" value="{{ row.day }}"></td>
+<td><input type="text" name="time" value="{{ row.time }}"></td>
+<td><input type="text" name="course" value="{{ row.course }}"></td>
+<td><input type="text" name="class_name" value="{{ row.class_name }}"></td>
+<td><input type="text" name="room" value="{{ row.room }}"></td>
+
+<td>
+<button type="submit" class="save-btn">Save</button>
+
+<a href="{{ url_for('delete_timetable', entry_id=row.id) }}">
+<button type="button" class="remove-btn">Remove</button>
+</a>
+</td>
+
+</form>
+
+</tr>
+{% endfor %}
+
+</table>
+</div>
+</body>
+</html>

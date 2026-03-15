@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Class Status</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#eef2ff,#f8fbff);
+}
+
+/* TOP BAR */
+
+.topbar{
+background:#1e3a8a;
+padding:16px 30px;
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.btn{
+padding:7px 14px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold;
+cursor:pointer;
+border:none;
+}
+
+.save{
+background:#22c55e;
+color:white;
+}
+
+.remove{
+background:#ef4444;
+color:white;
+}
+
+/* LAYOUT */
+
+.layout{
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:220px;
+background:#1e40af;
+min-height:calc(100vh - 64px);
+padding:20px;
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+padding:10px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+background:#2563eb;
+}
+
+/* MAIN CONTENT */
+
+.content{
+flex:1;
+padding:30px;
+}
+
+/* STAT CARDS */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+margin-bottom:25px;
+}
+
+.stat-card{
+background:white;
+padding:20px;
+border-radius:14px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+transition:0.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+.stat-card h2{
+margin:0;
+color:#2563eb;
+}
+
+/* CARDS */
+
+.card{
+background:white;
+padding:20px;
+border-radius:14px;
+margin-bottom:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #e5e7eb;
+}
+
+th{
+background:#eef2ff;
+}
+
+tbody tr{
+transition:0.25s;
+}
+
+tbody tr:hover{
+background:#f1f5ff;
+transform:scale(1.01);
+}
+
+/* INPUT */
+
+input{
+padding:7px;
+border-radius:6px;
+border:1px solid #cbd5e1;
+width:90%;
+}
+
+/* STATUS */
+
+.status{
+padding:5px 12px;
+border-radius:20px;
+font-weight:bold;
+display:inline-block;
+}
+
+.status-available{
+background:#dcfce7;
+color:#166534;
+}
+
+.status-ongoing{
+background:#fee2e2;
+color:#991b1b;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.05)}
+100%{transform:scale(1)}
+}
+
+/* SEARCH BAR */
+
+#searchInput{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #d1d5db;
+margin-bottom:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<h3>🏫 Class Status</h3>
+<a href="{{ url_for('dashboard') }}" class="btn save">← Back</a>
+</div>
+
+<div class="layout">
+
+<div class="sidebar">
+<a href="{{ url_for('dashboard') }}">Dashboard</a>
+<a href="{{ url_for('start_end_class') }}">Start / End Class</a>
+<a href="{{ url_for('timetable') }}">Timetable</a>
+<a href="{{ url_for('history') }}">Class History</a>
+<a href="{{ url_for('class_status') }}" class="active">Class Status</a>
+</div>
+
+<div class="content">
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-card">
+<h2 id="totalRooms">0</h2>
+<p>Total Rooms</p>
+</div>
+
+<div class="stat-card">
+<h2 id="availableRooms">0</h2>
+<p>Available Rooms</p>
+</div>
+
+<div class="stat-card">
+<h2 id="ongoingRooms">0</h2>
+<p>Ongoing Classes</p>
+</div>
+
+</div>
+
+<!-- ROOM TABLE -->
+
+<div class="card">
+
+<input type="text" id="searchInput" placeholder="🔎 Search by Room Number">
+
+<table id="roomTable">
+
+<thead>
+<tr>
+<th>Room Number</th>
+<th>Year</th>
+<th>Section</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in rooms %}
+<tr>
+
+<form method="POST" action="{{ url_for('edit_class_room') }}">
+
+<input type="hidden" name="id" value="{{ r.id }}">
+
+<td><input type="text" name="room" value="{{ r.room }}"></td>
+
+<td><input type="text" name="name" value="{{ r.year }}"></td>
+
+<td><input type="text" name="section" value="{{ r.section }}"></td>
+
+<td>
+
+{% if r.status == "Ongoing" %}
+<span class="status status-ongoing">Ongoing</span>
+{% else %}
+<span class="status status-available">Available</span>
+{% endif %}
+
+</td>
+
+<td>
+
+<button type="submit" class="btn save">Save</button>
+
+<a href="{{ url_for('delete_class_room', id=r.id) }}" class="btn remove">Remove</a>
+
+</td>
+
+</form>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+</div>
+
+<!-- ADD CLASS -->
+
+<div class="card" style="max-width:400px">
+
+<h3>Add New Class</h3>
+
+<form method="POST" action="{{ url_for('add_class_room') }}">
+
+<input type="text" name="room" placeholder="Room Number" required><br><br>
+
+<input type="text" name="name" placeholder="Year" required><br><br>
+
+<input type="text" name="section" placeholder="Section" required><br><br>
+
+<button class="btn save">Add Class</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* SEARCH */
+
+document.getElementById("searchInput").addEventListener("keyup",function(){
+
+let value=this.value.toLowerCase();
+let rows=document.querySelectorAll("#roomTable tbody tr");
+
+rows.forEach(row=>{
+
+let room=row.querySelector("input[name='room']").value.toLowerCase();
+
+row.style.display=room.includes(value) ? "" : "none";
+
+});
+
+});
+
+
+/* ROOM STATS */
+
+let rows=document.querySelectorAll("#roomTable tbody tr");
+
+document.getElementById("totalRooms").innerText=rows.length;
+
+let available=0;
+let ongoing=0;
+
+rows.forEach(row=>{
+
+let status=row.innerText.toLowerCase();
+
+if(status.includes("ongoing")){
+ongoing++;
+}else{
+available++;
+}
+
+});
+
+document.getElementById("availableRooms").innerText=available;
+document.getElementById("ongoingRooms").innerText=ongoing;
+
+</script>
+
+</body>
+</html>

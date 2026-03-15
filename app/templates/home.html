@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Classroom Scheduling System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+:root {
+    --blue-dark: #1e3a8a;
+    --blue-main: #2563eb;
+    --bg-light: #f1f5ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #e0e7ff, #ffffff 60%);
+    color: #1e293b;
+    overflow-x: hidden;
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar h2 {
+    margin: 0;
+    color: var(--blue-dark);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #334155;
+}
+
+.nav-links a:hover {
+    color: var(--blue-main);
+}
+
+.login-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
+    color: white !important;
+}
+
+/* ---------- HERO BACKDROP ---------- */
+.hero-bg {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    border-radius: 50%;
+    filter: blur(120px);
+    top: -200px;
+    right: -200px;
+    z-index: -1;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    padding: 90px 80px 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+
+    /* ✅ COLLEGE IMAGE BACKGROUND ADDED */
+    background-image: url("/static/project.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✅ Light overlay so text remains readable */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.75);
+    z-index: 0;
+}
+
+/* ✅ Keep content above overlay */
+.hero > * {
+    position: relative;
+    z-index: 1;
+}
+.hero h1 {
+    font-size: 52px;
+    color: var(--blue-dark);
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #475569;
+    margin-bottom: 32px;
+}
+
+/* ---------- GLASS PANEL ---------- */
+.glass-panel {
+    background: rgba(255,255,255,.55);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 30px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.12);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 22px;
+}
+
+.card h3 {
+    color: var(--blue-dark);
+}
+
+/* ---------- STRIP ---------- */
+.strip {
+    margin: 80px auto;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    padding: 0 30px;
+}
+
+.strip-box {
+    background: linear-gradient(180deg, #ffffff, #f8faff);
+    padding: 30px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 18px 40px rgba(0,0,0,.08);
+}
+
+.strip-box h2 {
+    font-size: 36px;
+    color: var(--blue-main);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding: 60px 30px;
+        text-align: center;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .strip {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2 class="logo">Smart Classroom</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/features">Features</a>
+        <a href="/about">About</a>
+        <a href="/login" class="login-btn">Login</a>
+    </div>
+</div>
+
+<div class="hero-bg"></div>
+
+<section class="hero">
+
+<div class="hero-left">
+
+<h1>Class Room Scheduling<br>And Availability System</h1>
+
+<p>
+A modern, real-time classroom scheduling platform that prevents conflicts,
+tracks usage intelligently, and gives administrators full control.
+</p>
+
+<a href="/login" class="hero-btn">Get Started</a>
+
+</div>
+<div class="hero-right">
+    <img src="{{ url_for('static', filename='A.png') }}" 
+         alt="System Features">
+</div>
+</section>
+<section class="strip">
+    <div class="strip-box">
+        <h2>0%</h2>
+        <span>Scheduling Conflicts</span>
+    </div>
+    <div class="strip-box">
+        <h2>100%</h2>
+        <span>Utilization Tracking</span>
+    </div>
+    <div class="strip-box">
+        <h2>BCA & MCA</h2>
+        <span>Department Focused</span>
+    </div>
+</section>
+
+</body>
+</html>

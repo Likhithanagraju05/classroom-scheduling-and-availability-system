@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About | Classroom Scheduling System</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(180deg, #eef2ff, #ffffff);
+            color: #1e293b;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        .header p {
+            margin-top: 12px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        /* Interactive sections */
+        .block {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 45px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .block:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-box {
+            min-width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #2563eb;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .block:hover .icon-box {
+            background: #2563eb;
+            color: white;
+            transform: rotate(6deg) scale(1.05);
+        }
+
+        .content h2 {
+            margin: 0 0 12px;
+            color: #1e3a8a;
+            font-size: 24px;
+        }
+
+        .content p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #475569;
+        }
+
+        /* Objectives grid */
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .objective {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .objective:hover {
+            background: #eef2ff;
+            transform: translateY(-6px);
+        }
+
+        .objective span {
+            display: block;
+            font-size: 30px;
+            margin-bottom: 12px;
+            color: #2563eb;
+        }
+
+        .objective p {
+            margin: 0;
+            font-size: 14.5px;
+            color: #334155;
+        }
+
+        /* Scope (timeline cleaned — NO line, NO dots) */
+        .timeline {
+            margin-top: 30px;
+        }
+
+        .timeline-item {
+            margin-bottom: 18px;
+        }
+
+        .timeline-item p {
+            margin: 0;
+            font-size: 15px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>About the System</h1>
+        <p>A smarter way to manage classrooms in real time</p>
+    </div>
+
+    <div class="container">
+
+        <!-- Problem -->
+        <div class="block">
+            <div class="icon-box">⚠️</div>
+            <div class="content">
+                <h2>Problem Statement</h2>
+                <p>
+                    In academic environments, classroom scheduling conflicts
+                    often arise due to classes exceeding their allotted time.
+                    Manual tracking fails to provide real-time visibility,
+                    causing delays and inefficient classroom usage.
+                </p>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="block">
+            <div class="icon-box">🎯</div>
+            <div class="content">
+                <h2>Objectives</h2>
+
+                <div class="objectives">
+                    <div class="objective">
+                        <span>📡</span>
+                        <p>Show real-time classroom availability</p>
+                    </div>
+
+                    <div class="objective">
+                        <span>⏳</span>
+                        <p>Reduce waiting and scheduling conflicts</p>
+                    </div>
+
+                    <div class="objective">
+                        <span>📊</span>
+                        <p>Track actual classroom usage accurately</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scope -->
+        <div class="block">
+            <div class="icon-box">🏫</div>
+            <div class="content">
+                <h2>Scope of the System</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <p>Designed specifically for the MCA department</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <p>Supports lecturers and administrators</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <p>Maintains long-term class usage history</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <p>Improves transparency and planning efficiency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

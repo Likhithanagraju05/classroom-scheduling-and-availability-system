@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2ff;
+        }
+
+        .topbar {
+            background: #1e3a8a;
+            padding: 16px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logout {
+            background: #22c55e;
+            padding: 8px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #1e40af;
+            min-height: calc(100vh - 64px);
+            padding: 20px;
+            color: white;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        .sidebar a.active,
+        .sidebar a:hover {
+            background: #2563eb;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        th {
+            background: #f1f5ff;
+        }
+
+        .status {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .stop {
+            background: #ef4444;
+            color: white;
+        }
+
+        .extend {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 420px;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+    </style>
+
+    <script>
+        let currentRoom = null;
+
+        function extendClass(room) {
+            currentRoom = room;
+            document.getElementById("extendInput").value = "";
+            document.getElementById("extendModal").style.display = "flex";
+            document.getElementById("extendInput").focus();
+        }
+
+        function closeModal() {
+            document.getElementById("extendModal").style.display = "none";
+        }
+
+        function submitExtend() {
+            let input = document.getElementById("extendInput").value
+                .toLowerCase().trim();
+
+            if (!input) return;
+
+            let minutes = 0;
+            const numberMatch = input.match(/[\d.]+/);
+
+            if (!numberMatch) {
+                alert("Invalid time input");
+                return;
+            }
+
+            const value = parseFloat(numberMatch[0]);
+
+            if (input.includes("h")) {
+                minutes = Math.round(value * 60);
+            } else {
+                minutes = Math.round(value);
+            }
+
+            if (isNaN(minutes) || minutes <= 0) {
+                alert("Invalid time value");
+                return;
+            }
+
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = `/extend_class/${currentRoom}`;
+
+            const field = document.createElement("input");
+            field.type = "hidden";
+            field.name = "minutes";
+            field.value = minutes;
+
+            form.appendChild(field);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="topbar">
+    <h3>Welcome, {{ name }}</h3>
+    <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+</div>
+
+<div class="layout">
+
+    <div class="sidebar">
+        <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+        <a href="{{ url_for('start_end_class') }}">Start / End Class</a>
+        <a href="{{ url_for('timetable') }}">Timetable</a>
+        <a href="{{ url_for('history') }}">Class History</a>
+        <a href="/class_status">Class Status</a>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <h2>Classroom Status Overview</h2>
+
+            <!-- ✅ SEARCH BAR ADDED (ONLY NEW UI ELEMENT) -->
+            <input type="text"
+                   id="searchRoomInput"
+                   placeholder="Search by Room Number..."
+                   onkeyup="searchDashboardRoom()"
+                   style="padding:8px; width:250px; margin-top:10px; border-radius:6px; border:1px solid #cbd5e1;">
+
+            <!-- Added ID for JS (no feature changed) -->
+            <table id="classTable">
+                <tr>
+                    <th>Room</th>
+                    <th>Lecturer</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Free At</th>
+                    <th>Extend</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for c in classes %}
+                <tr>
+                    <td>{{ c.room }}</td>
+                    <td>{{ c.lecturer }}</td>
+                    <td>{{ c.subject }}</td>
+                    <td><span class="status">{{ c.status }}</span></td>
+                    <td>{{ c.free_at }}</td>
+
+                    <td>
+                        <button class="btn extend"
+                                onclick="extendClass('{{ c.room }}')">
+                            Extend
+                        </button>
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('stop_class', room=c.room) }}"
+                           class="btn stop">
+                           Stop
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== EXTEND MODAL ===== -->
+<div id="extendModal" class="modal">
+    <div class="modal-content">
+        <p class="modal-title">
+            Enter extension time (examples: 45m, 90m, 2h, 1.5h, 120)
+        </p>
+        <input type="text" id="extendInput" placeholder="e.g. 45m or 1.5h">
+        <div class="modal-actions">
+            <button onclick="submitExtend()" class="btn extend">OK</button>
+            <button onclick="closeModal()" class="btn stop">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ SEARCH FUNCTION (NEW ONLY) -->
+<script>
+function searchDashboardRoom() {
+    let input = document.getElementById("searchRoomInput").value.trim().toLowerCase();
+    let rows = document.querySelectorAll("#classTable tr");
+
+    rows.forEach((row, index) => {
+        if (index === 0) return; // skip header
+
+        let roomCell = row.cells[0];
+        if (!roomCell) return;
+
+        let value = roomCell.textContent.trim().toLowerCase();
+
+        if (input === "" || value === input) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+</script>
+
+</body>
+</html>
